@@ -1,0 +1,12 @@
+# Ignorar la carpeta .idea
+/.idea/
+
+# Ignorar entorno virtual
+/env/
+
+# Ignorar migraciones
+/Prisma/migrations/
+
+# Ignorar archivos de caché de Python
+__pycache__/
+*.pyc
