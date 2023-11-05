@@ -24,6 +24,10 @@ def init_app():
     def home():
         return "Hola Casa"
 
+    from Controller import CargoController
+
+    app.include_router(CargoController.route)
+
     return app
 
 
