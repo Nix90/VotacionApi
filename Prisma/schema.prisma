@@ -1,0 +1,77 @@
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 5
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cargo {
+  idCargo     Int         @id @default(autoincrement())
+  NombreCargo String      @unique @db.VarChar(50)
+  Directiva   Directiva[]
+}
+
+model Miembro {
+  idMiembro                Int                        @id @default(autoincrement())
+  Nombres                  String                     @db.VarChar(50)
+  Apellidos                String                     @db.VarChar(50)
+  Edad                     Int
+  Estado                   Boolean
+  DetalleMiembroMinisterio DetalleMiembroMinisterio[]
+}
+
+model Ministerio {
+  idMinisterio             Int                        @id @default(autoincrement())
+  nombreministerio         String                     @unique @map("nombreministerio") @db.VarChar(50)
+  logo                     String                     @db.VarChar(250)
+  estado                   Boolean
+  DetalleMiembroMinisterio DetalleMiembroMinisterio[]
+
+  @@map("ministerio")
+}
+
+model Usuario {
+  idUsuario Int        @id @default(autoincrement())
+  usuario   String     @unique @db.VarChar(16)
+  passw     String     @db.VarChar(12)
+  rol       String     @unique @db.VarChar(16)
+  Eleccion  Eleccion[]
+}
+
+model Eleccion {
+  idEleccion Int         @id @default(autoincrement())
+  idUsuario  Int         @unique
+  anio       String      @unique
+  usuario    Usuario     @relation(fields: [idUsuario], references: [idUsuario])
+  Resultado  Resultado[]
+}
+
+model DetalleMiembroMinisterio {
+  idDetalleMiembroMinisterio Int         @id @default(autoincrement())
+  idMiembro                  Int
+  idMinisterio               Int
+  miembro                    Miembro     @relation(fields: [idMiembro], references: [idMiembro])
+  ministerio                 Ministerio  @relation(fields: [idMinisterio], references: [idMinisterio])
+  Resultado                  Resultado[]
+}
+
+model Resultado {
+  idResultado                Int                      @id @default(autoincrement())
+  idDetalleMiembroMinisterio Int
+  votos                      Int
+  idEleccion                 Int
+  detalle                    DetalleMiembroMinisterio @relation(fields: [idDetalleMiembroMinisterio], references: [idDetalleMiembroMinisterio])
+  eleccion                   Eleccion                 @relation(fields: [idEleccion], references: [idEleccion])
+  Directiva                  Directiva[]
+}
+
+model Directiva {
+  idDirectiva Int       @id @default(autoincrement())
+  idResultado Int
+  idCargo     Int
+  resultado   Resultado @relation(fields: [idResultado], references: [idResultado])
+  cargo       Cargo     @relation(fields: [idCargo], references: [idCargo])
+}
