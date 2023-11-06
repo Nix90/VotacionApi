@@ -10,4 +10,5 @@ class CreateMiembroM(BaseModel):
     Nombres: str
     Apellidos: str
     Edad: int
+    Estado: bool
     Ministerios: List[MinisteriosAsignandos]
