@@ -19,13 +19,15 @@ class MiembroMinisterioRepository:
             ministerio_data = item.ministerio
             detalle = {
                 "id": item.idDetalleMiembroMinisterio,
+                "idMiembro": miembro_data.idMiembro,
                 "Nombres": miembro_data.Nombres,
                 "Apellidos": miembro_data.Apellidos,
                 "Edad": miembro_data.Edad,
                 "Ministerio": ministerio_data.nombreministerio,
             }
             result.append(detalle)
-        return result
+        asc_miembro = sorted(result, key=lambda x: x['id'])
+        return asc_miembro
 
     @staticmethod
     async def get_by_id_dmm(dmm_i: int):
@@ -65,9 +67,9 @@ class MiembroMinisterioRepository:
         return new_detalle.idDetalleMiembroMinisterio
 
     @staticmethod
-    async def update_dmm(dmm_id: int, miembro_id: int, ministerio_id: int):
+    async def update_dmm(dmm_id: int, dmm: CreateDetalleMiembroMinisterio):
         return await prisma_connection.prisma.detallemiembroministerio.update(
             where={"idDetalleMiembroMinisterio": dmm_id}, data={
-                "idMiembro": miembro_id,
-                "idMinisterio": ministerio_id
+                "idMiembro": dmm.idMiembro,
+                "idMinisterio": dmm.idMinisterio
             })
