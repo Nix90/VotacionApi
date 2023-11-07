@@ -24,12 +24,15 @@ def init_app():
     def home():
         return "Hola Casa"
 
-    from Controller import CargoController, MinisterioController, MiembroController, MiembroMinisterioController
+    from Controller import CargoController, MinisterioController, MiembroController, MiembroMinisterioController, \
+        EleccionController, ResultadoController
 
     app.include_router(CargoController.route)
     app.include_router(MinisterioController.route)
     app.include_router(MiembroController.route)
     app.include_router(MiembroMinisterioController.route)
+    app.include_router(EleccionController.route)
+    app.include_router(ResultadoController.route)
 
     return app
 

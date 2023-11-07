@@ -13,6 +13,7 @@ class MiembroMinisterioRepository:
                 "ministerio": True
             }
         )
+
         result = []
         for item in detalle_miembro:
             miembro_data = item.miembro
@@ -44,6 +45,7 @@ class MiembroMinisterioRepository:
             ministerio_data = item.ministerio
             detalle = {
                 "id": item.idDetalleMiembroMinisterio,
+                "idMiembro": miembro_data.idMiembro,
                 "Nombres": miembro_data.Nombres,
                 "Apellidos": miembro_data.Apellidos,
                 "Edad": miembro_data.Edad,
