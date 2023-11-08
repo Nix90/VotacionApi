@@ -10,4 +10,5 @@ class DetallesMiembroVM(BaseModel):
 
 
 class SeleccionVM(BaseModel):
+    Ministerio: str
     Seleccion: list[DetallesMiembroVM]

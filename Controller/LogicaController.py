@@ -12,5 +12,6 @@ route = APIRouter(
 
 @route.post("/seleccion", response_model=ResponseSchema, response_model_exclude_none=True)
 async def seleccionar_miembros(seleccion: SeleccionVM):
-    await SeleccionService.selecion_ministerio(seleccion)
+    ministerio = seleccion.Ministerio
+    await SeleccionService.selecion_ministerio(seleccion, ministerio)
     return ResponseSchema(detail="Seleccion creada")
