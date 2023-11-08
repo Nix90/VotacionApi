@@ -25,7 +25,7 @@ def init_app():
         return "Hola Casa"
 
     from Controller import CargoController, MinisterioController, MiembroController, MiembroMinisterioController, \
-        EleccionController, ResultadoController
+        EleccionController, ResultadoController, LogicaController
 
     app.include_router(CargoController.route)
     app.include_router(MinisterioController.route)
@@ -33,6 +33,7 @@ def init_app():
     app.include_router(MiembroMinisterioController.route)
     app.include_router(EleccionController.route)
     app.include_router(ResultadoController.route)
+    app.include_router(LogicaController.route)
 
     return app
 
