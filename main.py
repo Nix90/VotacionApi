@@ -10,15 +10,16 @@ def init_app():
         version="2.0"
     )
 
-    @app.on_event("startup")
-    async def startup():
+    async def startup_event():
         print("Start Server")
         await prisma_connection.connect()
 
-    @app.on_event("shutdown")
-    async def shutdown():
+    async def shutdown_event():
         print("Shutdown Server!")
         await prisma_connection.disconnect()
+
+    app.add_event_handler("startup", startup_event)
+    app.add_event_handler("shutdown", shutdown_event)
 
     @app.get("/")
     def home():
