@@ -1,8 +1,37 @@
 from Models.ModelosLogica.SeleccionModel import SeleccionVM
+from Models.ModelosLogica.VatacionModel import CreateVotacion
+from Config.Connection import prisma_connection
 from prisma.errors import PrismaError
 
 
 class SeleccionRepository:
+
+    @staticmethod
+    async def create_votacion(ministerio: CreateVotacion):
+        minis = await prisma_connection.prisma.ministerio.find_unique(where={
+            "idMinisterio": ministerio.idMinisterio,
+            "nombreministerio": ministerio.NombreMin
+        })
+        miembrox = []
+        if minis:
+            busqueda = await prisma_connection.prisma.detallemiembroministerio.find_many(where={
+                "idMinisterio": ministerio.idMinisterio},
+                include={
+                    "miembro": True,
+                    "ministerio": True
+                }
+            )
+            for item in busqueda:
+                miembro_data = item.miembro
+                detalle = {
+                    "idDetalle": item.idDetalleMiembroMinisterio,
+                    "Nombre Completo": miembro_data.Nombres + ' ' + miembro_data.Apellidos,
+
+                }
+                miembrox.append(detalle)
+        else:
+            raise PrismaError("Los datos no coinciden para crear la votacion")
+        return miembrox
 
     @staticmethod
     async def create_seleccion(seleccion: SeleccionVM, ministerio: str):
