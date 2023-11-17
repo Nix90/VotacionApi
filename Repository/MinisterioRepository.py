@@ -33,5 +33,6 @@ class MinisterioRepository:
     async def update(ministerio_id: int, ministerio: CreateMinisterio):
         await prisma_connection.prisma.ministerio.update(where={"idMinisterio": ministerio_id}, data={
             "nombreministerio": ministerio.nombreministerio,
-            "logo": ministerio.logo
+            "logo": ministerio.logo,
+            "estado": ministerio.estado
         })

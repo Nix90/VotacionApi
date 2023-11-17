@@ -45,7 +45,7 @@ async def create_eleccion(eleccion: CreateEleccion):
 async def update_eleccion(idel: int = Path(..., alias="id"), *, update_elec: CreateEleccion):
     try:
         await EleccionService.update_eleccion(idel, update_elec)
-        return ResponseSchema(detai="Eleccion creada correctamente")
+        return ResponseSchema(detail="Eleccion actualizada correctamente")
     except Exception as ex:
         if 'Unique constraint failed on the fields' in str(ex):
             raise HTTPException(status_code=400, detail="Eleccion ya existe")

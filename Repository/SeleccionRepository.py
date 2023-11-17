@@ -23,12 +23,13 @@ class SeleccionRepository:
             )
             for item in busqueda:
                 miembro_data = item.miembro
-                detalle = {
-                    "idDetalle": item.idDetalleMiembroMinisterio,
-                    "Nombre Completo": miembro_data.Nombres + ' ' + miembro_data.Apellidos,
+                if miembro_data.Estado == 1:
+                    detalle = {
+                        "idDetalle": item.idDetalleMiembroMinisterio,
+                        "Nombre Completo": miembro_data.Nombres + ' ' + miembro_data.Apellidos,
 
-                }
-                miembrox.append(detalle)
+                    }
+                    miembrox.append(detalle)
         else:
             raise PrismaError("Los datos no coinciden para crear la votacion")
         return miembrox
