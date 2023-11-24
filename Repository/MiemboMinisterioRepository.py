@@ -1,5 +1,7 @@
 from Config.Connection import prisma_connection
 from Models.DetalleMiembroMinisterioModel import CreateDetalleMiembroMinisterio
+from Models.MiembroDetalleModel import CreateMiembroM
+from Repository.MiembroRepository import MiembroRepository
 from prisma.errors import PrismaError
 
 
@@ -69,9 +71,31 @@ class MiembroMinisterioRepository:
         return new_detalle.idDetalleMiembroMinisterio
 
     @staticmethod
-    async def update_dmm(dmm_id: int, dmm: CreateDetalleMiembroMinisterio):
-        return await prisma_connection.prisma.detallemiembroministerio.update(
-            where={"idDetalleMiembroMinisterio": dmm_id}, data={
-                "idMiembro": dmm.idMiembro,
-                "idMinisterio": dmm.idMinisterio
+    async def update_dmm(dmm_id: int, dmm: CreateMiembroM):
+
+        detalle_miembro = await prisma_connection.prisma.detallemiembroministerio.find_first(
+            where={"idDetalleMiembroMinisterio": dmm_id},
+            include={"miembro": True, "ministerio": True})
+
+        miembro_id = detalle_miembro.miembro.idMiembro
+
+        update_miembro = await MiembroRepository.udate_miembro(miembro_id, dmm)
+
+        ministerios_actuales = []
+        for item in dmm.Ministerios:
+            listados_ids = await prisma_connection.prisma.detallemiembroministerio.find_first(
+                where={"idMiembro": miembro_id, "idMinisterio": item.idMinisterio}
+            )
+            if listados_ids:
+                ministerios_actuales.append(listados_ids.idMinisterio)
+
+        listado_ids = [ministerio.idMinisterio for ministerio in dmm.Ministerios]
+
+        nuevos_ministerios = set(listado_ids) - set(ministerios_actuales)
+        print("Nuevos Ministerios: ", nuevos_ministerios)
+        for item in nuevos_ministerios:
+            result = await prisma_connection.prisma.detallemiembroministerio.create({
+                "idMiembro": miembro_id,
+                "idMinisterio": item
             })
+        return result

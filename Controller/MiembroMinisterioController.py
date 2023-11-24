@@ -35,9 +35,12 @@ async def create_multimimebor_ministerios(miembro_data: CreateMiembroM):
 
 
 @route.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
-async def update_miembro_detalle(dmm_id: int = Path(..., alias="id"), *, dmm: CreateDetalleMiembroMinisterio):
+async def update_miembro_detalle(dmm_id: int = Path(..., alias="id"), *, update_miembro: CreateMiembroM):
     try:
-        await MiembroMinisterioService.update_dmm(dmm_id, dmm)
-        return ResponseSchema(detail="Miembro Actualizado correctamente")
+        result = await MiembroMinisterioService.update_dmm(dmm_id, update_miembro)
+        if result == "NO":
+            return ResponseSchema(detail="Nada")
+        else:
+            return ResponseSchema(detail="Miembro Actualizado Controller correctamente")
     except Exception as ex:
         raise HTTPException(status_code=500, detail=str(ex))

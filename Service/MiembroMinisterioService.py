@@ -1,4 +1,5 @@
 from Models.DetalleMiembroMinisterioModel import CreateDetalleMiembroMinisterio
+from Models.MiembroDetalleModel import CreateMiembroM
 from Repository.MiemboMinisterioRepository import MiembroMinisterioRepository
 
 
@@ -17,5 +18,5 @@ class MiembroMinisterioService:
         return await MiembroMinisterioRepository.create_multiples(miembro_id, ministerio_id)
 
     @staticmethod
-    async def update_dmm(iddmm: int, dmm: CreateDetalleMiembroMinisterio):
+    async def update_dmm(iddmm: int, dmm: CreateMiembroM):
         return await MiembroMinisterioRepository.update_dmm(iddmm, dmm)
