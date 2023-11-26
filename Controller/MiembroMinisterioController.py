@@ -34,6 +34,15 @@ async def create_multimimebor_ministerios(miembro_data: CreateMiembroM):
         return HTTPException(status_code=500, detail=str(ex))
 
 
+@route.get("/detallemiembro/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def get_detalle_miembro(idm: int = Path(..., alias="id")):
+    try:
+        result = await MiembroMinisterioService.get_fullmiembro_id(idm)
+        return ResponseSchema(detail="Miembro detalle encontrado", result=result)
+    except Exception as ex:
+        return HTTPException(status_code=500, detail=str(ex))
+
+
 @route.put("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
 async def update_miembro_detalle(dmm_id: int = Path(..., alias="id"), *, update_miembro: CreateMiembroM):
     try:

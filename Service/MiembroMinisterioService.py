@@ -20,3 +20,7 @@ class MiembroMinisterioService:
     @staticmethod
     async def update_dmm(iddmm: int, dmm: CreateMiembroM):
         return await MiembroMinisterioRepository.update_dmm(iddmm, dmm)
+
+    @staticmethod
+    async def get_fullmiembro_id(idmiembro: int):
+        return await MiembroMinisterioRepository.get_by_idmiembro_detalle(idmiembro)

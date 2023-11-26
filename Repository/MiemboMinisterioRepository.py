@@ -71,6 +71,27 @@ class MiembroMinisterioRepository:
         return new_detalle.idDetalleMiembroMinisterio
 
     @staticmethod
+    async def get_by_idmiembro_detalle(idmiembro: int):
+        miembro = await prisma_connection.prisma.detallemiembroministerio.find_many(
+            where={"idMiembro": idmiembro},
+            include={"miembro": True, "ministerio": True}
+        )
+        result = []
+        for item in miembro:
+            detalle_miembro = item.miembro
+            detalle_ministerio = item.ministerio
+            detalle = {
+                "id": item.idDetalleMiembroMinisterio,
+                "idMiembro": detalle_miembro.idMiembro,
+                "Nombres": detalle_miembro.Nombres,
+                "Apellidos": detalle_miembro.Apellidos,
+                "Edad": detalle_miembro.Edad,
+                "Ministerio": detalle_ministerio.nombreministerio
+            }
+            result.append(detalle)
+        return result
+
+    @staticmethod
     async def update_dmm(dmm_id: int, dmm: CreateMiembroM):
 
         detalle_miembro = await prisma_connection.prisma.detallemiembroministerio.find_first(
@@ -91,11 +112,15 @@ class MiembroMinisterioRepository:
 
         listado_ids = [ministerio.idMinisterio for ministerio in dmm.Ministerios]
 
+        result = []
         nuevos_ministerios = set(listado_ids) - set(ministerios_actuales)
-        print("Nuevos Ministerios: ", nuevos_ministerios)
+
         for item in nuevos_ministerios:
             result = await prisma_connection.prisma.detallemiembroministerio.create({
                 "idMiembro": miembro_id,
                 "idMinisterio": item
             })
         return result
+
+    @staticmethod
+    async def eliminar_miembro_ministerios_asignacion():
