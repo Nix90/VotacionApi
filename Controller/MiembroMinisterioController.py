@@ -53,3 +53,12 @@ async def update_miembro_detalle(dmm_id: int = Path(..., alias="id"), *, update_
             return ResponseSchema(detail="Miembro Actualizado Controller correctamente")
     except Exception as ex:
         raise HTTPException(status_code=500, detail=str(ex))
+
+
+@route.delete("/{id}", response_model=ResponseSchema, response_model_exclude_none=True)
+async def delete_asignacion(dmm_id: int = Path(..., alias="id"), *, update_miembro: CreateMiembroM):
+    try:
+        result = await MiembroMinisterioService.delete_asignacion_ministerio(dmm_id, update_miembro)
+        return ResponseSchema(detail="Se elimino la asignacion del ministerio al miembro")
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail=str(ex))

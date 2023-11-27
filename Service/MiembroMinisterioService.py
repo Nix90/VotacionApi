@@ -24,3 +24,6 @@ class MiembroMinisterioService:
     @staticmethod
     async def get_fullmiembro_id(idmiembro: int):
         return await MiembroMinisterioRepository.get_by_idmiembro_detalle(idmiembro)
+    @staticmethod
+    async def delete_asignacion_ministerio(dmm_id: int, dmm: CreateMiembroM):
+        return await MiembroMinisterioRepository.eliminar_miembro_ministerios_asignacion(dmm_id, dmm)

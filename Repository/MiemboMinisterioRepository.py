@@ -123,4 +123,35 @@ class MiembroMinisterioRepository:
         return result
 
     @staticmethod
-    async def eliminar_miembro_ministerios_asignacion():
+    async def eliminar_miembro_ministerios_asignacion(dmm_id: int, dmm: CreateMiembroM):
+
+        detalle_miembro = await prisma_connection.prisma.detallemiembroministerio.find_first(
+            where={"idDetalleMiembroMinisterio": dmm_id},
+            include={"miembro": True, "ministerio": True})
+
+        miembro_id = detalle_miembro.miembro.idMiembro
+        minis_actuales = await prisma_connection.prisma.detallemiembroministerio.find_many(
+            where={"idMiembro": miembro_id},
+            include={"miembro": True, "ministerio": True}
+        )
+
+        listados = []
+        for item in minis_actuales:
+            ids = item.idMinisterio
+            listados.append(ids)
+        print("ministerios actuales", listados)
+
+        listar_ids_request = [minis.idMinisterio for minis in dmm.Ministerios]
+
+        print("ministerios request", listar_ids_request)
+        eliminado_ids = set(listados) - set(listar_ids_request)
+
+        print("ministerios a elimiiar: ", eliminado_ids)
+        for item in eliminado_ids:
+            iddetalle = await prisma_connection.prisma.detallemiembroministerio.find_first(
+                where={"idMiembro": miembro_id, "idMinisterio": item}
+            )
+            elimar = await prisma_connection.prisma.detallemiembroministerio.delete(
+                where={"idDetalleMiembroMinisterio": iddetalle.idDetalleMiembroMinisterio})
+
+

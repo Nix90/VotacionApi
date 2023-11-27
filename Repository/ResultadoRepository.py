@@ -36,9 +36,10 @@ class ResultadoRepository:
                         "Ministerio": ministerio.nombreministerio,
                     }
                     result_list.append(result_data)
+                    asc_miembro = sorted(result_list, key=lambda x: x['votos'], reverse=True)
         else:
             raise PrismaError("Los datos no coinciden para listar los resultados por ministerio")
-        return result_list
+        return asc_miembro
 
     @staticmethod
     async def create_resultado(resultado: CreateResultado):
