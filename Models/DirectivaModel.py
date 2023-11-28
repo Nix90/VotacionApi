@@ -1,9 +1,15 @@
 from pydantic import BaseModel
+from typing import List
+
+
+class ListadoResultado(BaseModel):
+    idResultado: int
 
 
 class CreateDiretiva(BaseModel):
-    idResultado: int
-    idCargo: int
+    Ministerio: str
+    Puestos: int
+    Resultados: List[ListadoResultado]
 
 
 class RetrieveDirectiva(BaseModel):

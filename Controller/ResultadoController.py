@@ -11,7 +11,7 @@ route = APIRouter(
 )
 
 
-@route.put("", response_model=ResponseSchema, response_model_exclude_none=True)
+@route.put("/get_resultados", response_model=ResponseSchema, response_model_exclude_none=True)
 async def get_all(ministerio: CreateVotacion):
     result = await ResultadoService.get_result_ministerio(ministerio)
     return ResponseSchema(detail="Listado de lso resultados", result=result)

@@ -39,3 +39,37 @@ class DirectivaRepository:
                     }
                     result_list.append(result_data)
         return result_list
+
+    @staticmethod
+    async def create_directiva(resultados_eleccion: CreateDiretiva):
+        cargos = await prisma_connection.prisma.cargo.find_many()
+        cargo = []
+        for item in cargos:
+            result = [item.idCargo, item.NombreCargo]
+            cargo.append(result)
+        ministerio = resultados_eleccion.Ministerio
+        print(ministerio)
+        print("cargos ", cargo)
+        idresultados = [item.idResultado for item in resultados_eleccion.Resultados]
+
+        print("ids result ", idresultados)
+
+        listar_resultados = []
+        if resultados_eleccion.Puestos == 4:
+            for item in idresultados:
+                buscar_resultados = await prisma_connection.prisma.resultado.find_first(
+                    where={"idResultado": item}
+                )
+
+                xxx = buscar_resultados.idResultado, buscar_resultados.votos
+                listar_resultados.append(xxx)
+            print(listar_resultados)
+            print(listar_resultados[1][0])
+
+        if resultados_eleccion.Puestos == 7:
+            print("Eleccion diaconizas")
+
+        if resultados_eleccion.Puestos == 8:
+            print("eleccion de diaconoz")
+        if resultados_eleccion.Puestos == 2:
+            print("Eleccion explo")
