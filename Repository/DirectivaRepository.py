@@ -42,29 +42,31 @@ class DirectivaRepository:
 
     @staticmethod
     async def create_directiva(resultados_eleccion: CreateDiretiva):
-        cargos = await prisma_connection.prisma.cargo.find_many()
+        cargoss = await prisma_connection.prisma.cargo.find_many()
         cargo = []
-        for item in cargos:
+        for item in cargoss:
             result = [item.idCargo, item.NombreCargo]
             cargo.append(result)
         ministerio = resultados_eleccion.Ministerio
-        print(ministerio)
-        print("cargos ", cargo)
+
         idresultados = [item.idResultado for item in resultados_eleccion.Resultados]
-
-        print("ids result ", idresultados)
-
+        print("id resultados", idresultados)
         listar_resultados = []
         if resultados_eleccion.Puestos == 4:
             for item in idresultados:
                 buscar_resultados = await prisma_connection.prisma.resultado.find_first(
                     where={"idResultado": item}
                 )
+                resultados_ids = buscar_resultados.idResultado, buscar_resultados.votos
+                listar_resultados.append(resultados_ids)
 
-                xxx = buscar_resultados.idResultado, buscar_resultados.votos
-                listar_resultados.append(xxx)
-            print(listar_resultados)
-            print(listar_resultados[1][0])
+            print("Listar los resultados del request", listar_resultados)
+            listar_resultados = sorted(listar_resultados, key=lambda x: x[1], reverse=True)
+
+            # cargos = ["Presidente", "Vice-Presidente", "Secretario", "Tesorero"]
+            for i, (id_resultado, votos) in enumerate(listar_resultados[:len(cargo)]):
+                cargo_asignado = cargo[i][1]
+                print(f"Resultado id {id_resultado} - Votos: {votos} - Cargo: {cargo_asignado}")
 
         if resultados_eleccion.Puestos == 7:
             print("Eleccion diaconizas")

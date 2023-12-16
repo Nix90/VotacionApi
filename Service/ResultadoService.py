@@ -12,3 +12,7 @@ class ResultadoService:
     @staticmethod
     async def create_resultado(resultado: CreateResultado):
         return await ResultadoRepository.create_resultado(resultado)
+
+    @staticmethod
+    async def get_resultados_con_cargos(ministerio: CreateVotacion):
+        return await ResultadoRepository.get_all_directiva(ministerio)

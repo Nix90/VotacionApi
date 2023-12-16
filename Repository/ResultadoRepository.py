@@ -48,3 +48,37 @@ class ResultadoRepository:
             "votos": resultado.votos,
             "idEleccion": resultado.idEleccion
         })
+
+    @staticmethod
+    async def get_all_directiva(resultados_eleccion: CreateVotacion):
+        minis = await prisma_connection.prisma.ministerio.find_unique(where={
+            "idMinisterio": resultados_eleccion.idMinisterio,
+            "nombreministerio": resultados_eleccion.NombreMin
+        })
+        resultados = await prisma_connection.prisma.resultado.find_many()
+
+        result_list = []
+        if minis and resultados_eleccion.Puestos == 4:
+            detalle_miembro = await prisma_connection.prisma.detallemiembroministerio.find_many(
+                where={"idMinisterio": resultados_eleccion.idMinisterio}
+            )
+
+            ids_detalles = []
+            for item in detalle_miembro:
+                iddetalle = item.idDetalleMiembroMinisterio
+                ids_detalles.append(iddetalle)
+            print("id detalle", ids_detalles)
+
+            # buscar resultados
+            for item in ids_detalles:
+                buscar_resultado = await prisma_connection.prisma.resultado.find_first(
+                    where={"idDetalleMiembroMinisterio": item}
+                )
+                if buscar_resultado:
+                    resultado_ids = buscar_resultado.idResultado, buscar_resultado.votos
+                    result_list.append(resultado_ids)
+            print("Resutlados: ", result_list)
+
+            result_list = sorted(result_list, key=lambda x: x[1], reverse=True)
+
+            print("listados de resultados ordenados: ", result_list)
