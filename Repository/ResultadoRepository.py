@@ -62,7 +62,11 @@ class ResultadoRepository:
             detalle_miembro = await prisma_connection.prisma.detallemiembroministerio.find_many(
                 where={"idMinisterio": resultados_eleccion.idMinisterio}
             )
-
+            cargoss = await prisma_connection.prisma.cargo.find_many()
+            cargo = []
+            for item in cargoss:
+                result = [item.idCargo, item.NombreCargo]
+                cargo.append(result)
             ids_detalles = []
             for item in detalle_miembro:
                 iddetalle = item.idDetalleMiembroMinisterio
@@ -82,3 +86,9 @@ class ResultadoRepository:
             result_list = sorted(result_list, key=lambda x: x[1], reverse=True)
 
             print("listados de resultados ordenados: ", result_list)
+
+            # cargos = ["Presidente", "Vice-Presidente", "Secretario", "Tesorero"]
+            for i, (id_resultado, votos) in enumerate(result_list[:len(cargo)]):
+                cargo_asignado = cargo[i][1]
+                print(f"Resultado id {id_resultado} - Votos: {votos} - Cargo: {cargo_asignado}")
+
